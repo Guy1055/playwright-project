@@ -42,7 +42,7 @@ User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English
 - Give a recommendation, not a survey of options.
 
 ## Testing notes
-- Tag tests: `@smoke` (fast, critical paths) and the rest of the suite.
+- Tag tests with `{ tag: "@sanity" }` (broad core coverage, fast enough for every push); everything else is untagged and runs only in the full suite.
 - Local, per change: run only the affected spec file(s).
-- On every push (CI, step 5): `@smoke` only.
+- On every push (CI, step 5): `npx playwright test --grep @sanity`.
 - Full suite: in CI on a nightly schedule and manually, parallel/sharded.
