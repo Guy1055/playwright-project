@@ -21,12 +21,12 @@
 - [ ] Test Plan: scope, תרחישים, עדיפויות, נתוני בדיקה, סיכונים
 - [ ] תרגול ניסוח פרומפטים: למצוא את המילים שגורמות ל-Claude לעבוד כמו שאתה רוצה
   - [ ] תיעוד "פרומפט לפני/אחרי" בקובץ `prompt-notes.md`
-- [ ] התקנת Playwright: `npm init playwright@latest`
+- [x] התקנת Playwright: `npm init playwright@latest`
 - [ ] כתיבת טסטים ראשונים עם Claude (Page Object Model)
 - [ ] הרצה יציבה מקומית (ללא flaky)
 
 ## שלב 3 – Playwright Traces
-- [ ] הגדרת `trace: 'on-first-retry'` ב-`playwright.config`
+- [x] הגדרת `trace: 'on-first-retry'` ב-`playwright.config`
 - [ ] להריץ טסט שנכשל בכוונה ולפתוח trace: `npx playwright show-trace`
 - [ ] ללמוד לקרוא: timeline, network, console, DOM snapshots
 - [ ] לתקן באג/flakiness בעזרת trace

@@ -16,6 +16,7 @@ https://practicesoftwaretesting.com (Toolshop, a public demo app built for test 
 - Prefer role/label/test-id locators over CSS/XPath.
 - No hard-coded sleeps; rely on auto-waiting and web-first assertions.
 - Traces: `on-first-retry`.
+- Work machine is behind a corporate proxy: the config passes HTTPS_PROXY to Chromium explicitly.
 - Secrets (e.g. ANTHROPIC_API_KEY) only via env vars / GitHub Secrets, never committed.
 
 ## Git workflow (solo personal project)
