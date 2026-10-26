@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    headless: true,
+    headless: !!process.env.CI, // headed locally to watch runs, headless in CI
     baseURL: 'https://practicesoftwaretesting.com',
     testIdAttribute: 'data-test',
     trace: 'on-first-retry',

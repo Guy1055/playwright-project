@@ -8,11 +8,12 @@
 - [x] `git init` + חיבור לריפו בוצעו
 - [x] אתר נבחר: https://practicesoftwaretesting.com (נבדק, נגיש)
 - [x] קובץ `CLAUDE.md` נוצר
+- [ ] להפעיל Push protection בגיטהאב (Settings > Code security > Secret protection) – על המשתמש
 
 ## שלב 1 – Skills (מכניקת בניית סקילים)
 - [x] להבין מבנה של skill: תיקייה + `SKILL.md` (frontmatter: name, description) + קבצי עזר
 - [x] לכתוב סקיל ראשון פשוט: `.claude/skills/commit-message`
-- [ ] לבדוק שהוא מופעל (trigger) לפי ה-description
+- [ ] לבדוק שהוא מופעל (trigger) לפי ה-description (נבדק רק כשהסקיל הוזכר בשם; נשארה בדיקה נקייה בשיחה חדשה בלי להזכיר אותו: "תקומיט", ו"תסביר מה זה rebase" שלא אמור להפעיל)
 - [x] לשפר את ה-description עד שמופעל בדיוק כשצריך (הורחב: commits אוטומטיים, עברית, גבולות)
 - [ ] סקיל שני, אמיתי לפרויקט: `write-playwright-test` (מוסכמות, POM, locators)
 
@@ -22,7 +23,7 @@
 - [ ] תרגול ניסוח פרומפטים: למצוא את המילים שגורמות ל-Claude לעבוד כמו שאתה רוצה
   - [ ] תיעוד "פרומפט לפני/אחרי" בקובץ `prompt-notes.md`
 - [x] התקנת Playwright: `npm init playwright@latest`
-- [ ] כתיבת טסטים ראשונים עם Claude (Page Object Model)
+- [ ] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity` למסלולים העיקריים) – כרגע יש רק 2 smoke tests ב-`tests/home.spec.ts`
 - [ ] הרצה יציבה מקומית (ללא flaky)
 
 ## שלב 3 – Playwright Traces
