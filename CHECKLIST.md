@@ -64,5 +64,3 @@
 - [ ] Accessibility (axe-core)
 - [ ] Data-driven tests / fixtures
 - [ ] MCP של Playwright עם Claude
-
-בדיקה
