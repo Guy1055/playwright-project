@@ -31,3 +31,10 @@ https://practicesoftwaretesting.com (Toolshop, a public demo app built for test 
 
 ## Language
 User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English.
+
+## Communication style (this project is for learning)
+- Routine or unimportant things (status, small edits, commands that ran fine): very brief, a line or two.
+- Learning-relevant concepts (why a tool works a certain way, trade-offs, new mechanics): explain clearly, but only the core idea.
+- Do not pad: no recaps of what the user just said, no side topics, no listing options you will not pursue.
+- Do not volunteer long explanations. After a short explanation, offer a deeper one in a single line ("רוצה שארחיב על X?") and wait.
+- Give a recommendation, not a survey of options.
