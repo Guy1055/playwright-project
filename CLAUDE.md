@@ -18,5 +18,12 @@ https://practicesoftwaretesting.com (Toolshop, a public demo app built for test 
 - Traces: `on-first-retry`.
 - Secrets (e.g. ANTHROPIC_API_KEY) only via env vars / GitHub Secrets, never committed.
 
+## Git workflow (solo personal project)
+- Work directly on `main`. No feature branches, no PRs.
+- After each small, working piece of a feature: commit and push straight away, without asking.
+- Many small commits are preferred over big ones. Use the `commit-message` skill for wording.
+- Before every push: `git status` clean of junk, no secrets, tests pass if any exist.
+- Never force-push; never rewrite history already pushed.
+
 ## Language
 User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English.

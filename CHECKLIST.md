@@ -5,7 +5,7 @@
 ## שלב 0 – הכנות
 - [x] Node.js מותקן (v24 ✔), npm (✔), git (✔)
 - [x] חשבון GitHub + ריפו: Guy1055/playwright-project (נדחף ל-main)
-- [x] `git init` מקומי בוצע (נשאר לחבר לריפו ב-GitHub)
+- [x] `git init` + חיבור לריפו בוצעו
 - [x] אתר נבחר: https://practicesoftwaretesting.com (נבדק, נגיש)
 - [x] קובץ `CLAUDE.md` נוצר
 
