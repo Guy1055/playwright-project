@@ -3,7 +3,7 @@
 ## Goal
 Portfolio project for QA Automation roles: test plan, Playwright tests, Claude skills,
 a dynamic workflow that generates tests, and Claude running in GitHub Actions CI.
-Progress is tracked in CHECKLIST.md.
+Progress is tracked in CHECKLIST.md file.
 
 ## System under test
 https://practicesoftwaretesting.com (Toolshop, a public demo app built for test practice).
