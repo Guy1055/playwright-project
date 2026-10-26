@@ -4,14 +4,14 @@
 
 ## שלב 0 – הכנות
 - [x] Node.js מותקן (v24 ✔), npm (✔), git (✔)
-- [ ] חשבון GitHub (+ ריפו חדש, למשל `claude-qa-automation`)
+- [x] חשבון GitHub + ריפו: Guy1055/playwright-project (נדחף ל-main)
 - [x] `git init` מקומי בוצע (נשאר לחבר לריפו ב-GitHub)
 - [x] אתר נבחר: https://practicesoftwaretesting.com (נבדק, נגיש)
 - [x] קובץ `CLAUDE.md` נוצר
 
 ## שלב 1 – Skills (מכניקת בניית סקילים)
-- [ ] להבין מבנה של skill: תיקייה + `SKILL.md` (frontmatter: name, description) + קבצי עזר
-- [ ] לכתוב סקיל ראשון פשוט (נושא חופשי, לתרגול המכניקה)
+- [x] להבין מבנה של skill: תיקייה + `SKILL.md` (frontmatter: name, description) + קבצי עזר
+- [x] לכתוב סקיל ראשון פשוט: `.claude/skills/commit-message`
 - [ ] לבדוק שהוא מופעל (trigger) לפי ה-description
 - [ ] לשפר את ה-description עד שמופעל בדיוק כשצריך
 - [ ] סקיל שני, אמיתי לפרויקט: `write-playwright-test` (מוסכמות, POM, locators)
