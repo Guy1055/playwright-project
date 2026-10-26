@@ -13,7 +13,7 @@
 - [x] להבין מבנה של skill: תיקייה + `SKILL.md` (frontmatter: name, description) + קבצי עזר
 - [x] לכתוב סקיל ראשון פשוט: `.claude/skills/commit-message`
 - [ ] לבדוק שהוא מופעל (trigger) לפי ה-description
-- [ ] לשפר את ה-description עד שמופעל בדיוק כשצריך
+- [x] לשפר את ה-description עד שמופעל בדיוק כשצריך (הורחב: commits אוטומטיים, עברית, גבולות)
 - [ ] סקיל שני, אמיתי לפרויקט: `write-playwright-test` (מוסכמות, POM, locators)
 
 ## שלב 2 – Test Plan + אוטומציה עם Claude
