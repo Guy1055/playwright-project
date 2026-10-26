@@ -23,7 +23,9 @@ https://practicesoftwaretesting.com (Toolshop, a public demo app built for test 
 - Work directly on `main`. No feature branches, no PRs.
 - After each small, working piece of a feature: commit and push straight away, without asking.
 - Many small commits are preferred over big ones. Use the `commit-message` skill for wording.
-- Before every push: `git status` clean of junk, no secrets, tests pass if any exist.
+- Stage files by explicit path, never `git add -A` or `git add .`.
+- Before every commit: run `git status`. Before every push: run `git diff --stat origin/main` and check for junk, secrets, `.env`, large or unexpected files.
+- Tests: run only the tests related to the change before pushing; the full suite runs in CI (see the tiers in the testing notes).
 - Never force-push; never rewrite history already pushed.
 - At the start of each session run `git pull --rebase origin main`.
 - If a push is rejected: `git pull --rebase origin main`, then push again.
@@ -38,3 +40,9 @@ User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English
 - Do not pad: no recaps of what the user just said, no side topics, no listing options you will not pursue.
 - Do not volunteer long explanations. After a short explanation, offer a deeper one in a single line ("רוצה שארחיב על X?") and wait.
 - Give a recommendation, not a survey of options.
+
+## Testing notes
+- Tag tests: `@smoke` (fast, critical paths) and the rest of the suite.
+- Local, per change: run only the affected spec file(s).
+- On every push (CI, step 5): `@smoke` only.
+- Full suite: in CI on a nightly schedule and manually, parallel/sharded.
