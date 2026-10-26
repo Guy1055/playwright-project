@@ -8,7 +8,7 @@
 - [x] `git init` + חיבור לריפו בוצעו
 - [x] אתר נבחר: https://practicesoftwaretesting.com (נבדק, נגיש)
 - [x] קובץ `CLAUDE.md` נוצר
-- [ ] להפעיל Push protection בגיטהאב (Settings > Code security > Secret protection) – על המשתמש
+- [x] להפעיל Push protection בגיטהאב (הופעל)
 
 ## שלב 1 – Skills (מכניקת בניית סקילים)
 - [x] להבין מבנה של skill: תיקייה + `SKILL.md` (frontmatter: name, description) + קבצי עזר
