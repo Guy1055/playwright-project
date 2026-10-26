@@ -1,0 +1,22 @@
+# Project: Playwright QA automation with Claude
+
+## Goal
+Portfolio project for QA Automation roles: test plan, Playwright tests, Claude skills,
+a dynamic workflow that generates tests, and Claude running in GitHub Actions CI.
+Progress is tracked in CHECKLIST.md.
+
+## System under test
+https://practicesoftwaretesting.com (Toolshop, a public demo app built for test practice).
+- UI: Angular. API docs are linked from the site.
+- Only exercise flows that a normal user could (browse, search, cart, checkout, login, register).
+- Use test accounts only; never real personal data.
+
+## Conventions
+- Playwright + TypeScript, Page Object Model under `pages/`, tests under `tests/`.
+- Prefer role/label/test-id locators over CSS/XPath.
+- No hard-coded sleeps; rely on auto-waiting and web-first assertions.
+- Traces: `on-first-retry`.
+- Secrets (e.g. ANTHROPIC_API_KEY) only via env vars / GitHub Secrets, never committed.
+
+## Language
+User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English.
