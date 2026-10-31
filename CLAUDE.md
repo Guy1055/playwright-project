@@ -48,7 +48,7 @@ User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English
 - Full suite: in CI on a nightly schedule and manually, parallel/sharded.
 
 ## Current status (update at the end of each session)
-- Done: step 0, skill `commit-message` (works when named; clean auto-activation test pending), Playwright installed and configured, 2 smoke tests tagged `@sanity` (`tests/home.spec.ts`).
-- Next: build the skill `.claude/skills/write-playwright-test` (conventions above), then explore the site, write a Test Plan, and add real tests. After that: traces, dynamic workflow, CI.
+- Done: step 0, skill `commit-message` (verified), skill `write-playwright-test` (written; auto-activation test pending), Playwright installed and configured, 2 smoke tests tagged `@sanity` (`tests/home.spec.ts`).
+- Next: explore the site, write a Test Plan, and add real tests (using `write-playwright-test`). After that: traces, dynamic workflow, CI.
 - Environment notes: Windows, Git Bash and PowerShell. Python is NOT installed: use Node or shell tools for scripts. Run tests with `npx playwright test` (add `--grep @sanity` for the sanity tier).
 - Commit messages end with `Commit #N` where N = `git rev-list --count HEAD` + 1 (see the `commit-message` skill).
