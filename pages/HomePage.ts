@@ -22,6 +22,24 @@ export class HomePage {
     await this.searchSubmit.click();
   }
 
+  /** Category checkbox in the sidebar filter (parent or sub-category, e.g. "Hammer"). */
+  categoryCheckbox(name: string): Locator {
+    return this.page.getByRole('checkbox', { name, exact: true });
+  }
+
+  async filterByCategory(name: string) {
+    await this.categoryCheckbox(name).check();
+  }
+
+  async clearCategory(name: string) {
+    await this.categoryCheckbox(name).uncheck();
+  }
+
+  /** Trimmed product names currently listed (card names are padded with whitespace). */
+  async listedNames(): Promise<string[]> {
+    return (await this.productNames.allInnerTexts()).map((n) => n.trim());
+  }
+
   /** Opens the first in-stock product card and returns its name. */
   async openFirstInStockProduct(): Promise<string> {
     const card = this.page
