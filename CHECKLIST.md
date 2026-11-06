@@ -24,7 +24,7 @@
 - [ ] תרגול ניסוח פרומפטים: למצוא את המילים שגורמות ל-Claude לעבוד כמו שאתה רוצה
   - [ ] תיעוד "פרומפט לפני/אחרי" בקובץ `prompt-notes.md`
 - [x] התקנת Playwright: `npm init playwright@latest`
-- [ ] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity` למסלולים העיקריים) – כרגע יש רק 2 smoke tests ב-`tests/home.spec.ts`
+- [ ] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity` למסלולים העיקריים) – P1 הושלמו (home, cart, auth, checkout); נשארו תרחישי P2 מ-`TEST-PLAN.md`
 - [ ] הרצה יציבה מקומית (ללא flaky)
 
 ## שלב 3 – Playwright Traces
@@ -65,4 +65,4 @@
 - [ ] Visual regression
 - [ ] Accessibility (axe-core)
 - [ ] Data-driven tests / fixtures
-- [ ] MCP של Playwright עם Claude
+- [x] MCP של Playwright עם Claude (`.mcp.json`, גרסה נעוצה; נטען בסשן חדש אחרי אישור ב-/mcp)
