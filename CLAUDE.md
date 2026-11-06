@@ -51,6 +51,7 @@ User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English
 - Done: step 0, skill `commit-message` (verified), skill `write-playwright-test` (written; auto-activation test pending), Playwright installed and configured, 2 smoke tests tagged `@sanity` (`tests/home.spec.ts`).
 - Done: site exploration and `TEST-PLAN.md` (scenarios CAT/PRD/CRT/CHK/AUTH with priorities).
 - Done: all P1 scenarios implemented and stable (`tests/home|cart|auth|checkout.spec.ts`, page objects under `pages/`). Playwright MCP configured in `.mcp.json` (pinned version; approve it in a new session). Chromium installed locally.
-- Next: prompt practice (`prompt-notes.md`), P2 scenarios from the plan, then traces, dynamic workflow, CI.
+- Done: CAT-05 (`tests/catalog-filter.spec.ts`, `HomePage` filter helpers), explored via Playwright MCP; `prompt-notes.md` started (MCP vs built-in browser). `.playwright-mcp/` is gitignored.
+- Next: more prompt practice (before/after), remaining P2 scenarios from the plan, then traces, dynamic workflow, CI.
 - Environment notes: Windows, Git Bash and PowerShell. Python is NOT installed: use Node or shell tools for scripts. Run tests with `npx playwright test` (add `--grep @sanity` for the sanity tier).
 - Commit messages end with `Commit #N` where N = `git rev-list --count HEAD` + 1 (see the `commit-message` skill).

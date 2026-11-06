@@ -10,3 +10,6 @@ blob-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Playwright MCP output (snapshots, console logs)
+.playwright-mcp/

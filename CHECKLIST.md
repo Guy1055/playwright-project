@@ -21,10 +21,10 @@
 ## שלב 2 – Test Plan + אוטומציה עם Claude
 - [x] חקירת האתר (ידנית + עם Claude/דפדפן)
 - [x] Test Plan: scope, תרחישים, עדיפויות, נתוני בדיקה, סיכונים (`TEST-PLAN.md`)
-- [ ] תרגול ניסוח פרומפטים: למצוא את המילים שגורמות ל-Claude לעבוד כמו שאתה רוצה
-  - [ ] תיעוד "פרומפט לפני/אחרי" בקובץ `prompt-notes.md`
+- [~] תרגול ניסוח פרומפטים: למצוא את המילים שגורמות ל-Claude לעבוד כמו שאתה רוצה
+  - [~] תיעוד בקובץ `prompt-notes.md` – נפתח (סעיף MCP מול דפדפן מובנה); חסר "לפני/אחרי"
 - [x] התקנת Playwright: `npm init playwright@latest`
-- [ ] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity` למסלולים העיקריים) – P1 הושלמו (home, cart, auth, checkout); נשארו תרחישי P2 מ-`TEST-PLAN.md`
+- [ ] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity` למסלולים העיקריים) – P1 הושלמו (home, cart, auth, checkout); CAT-05 (P2) הושלם; נשארו תרחישי P2 נוספים מ-`TEST-PLAN.md`
 - [ ] הרצה יציבה מקומית (ללא flaky)
 
 ## שלב 3 – Playwright Traces
