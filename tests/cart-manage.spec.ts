@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures/test';
 import { ProductPage } from '../pages/ProductPage';
 import { CartPage } from '../pages/CartPage';
+import { HOME_URL } from '../support/env';
 import { parsePrice } from '../support/testData';
 
 test.describe('Cart management', () => {

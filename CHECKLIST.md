@@ -24,45 +24,47 @@
 - [~] תרגול ניסוח פרומפטים: למצוא את המילים שגורמות ל-Claude לעבוד כמו שאתה רוצה
   - [~] תיעוד בקובץ `prompt-notes.md` – נפתח (סעיף MCP מול דפדפן מובנה); חסר "לפני/אחרי"
 - [x] התקנת Playwright: `npm init playwright@latest`
-- [ ] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity` למסלולים העיקריים) – P1 הושלמו (home, cart, auth, checkout); CAT-05 (P2) הושלם; נשארו תרחישי P2 נוספים מ-`TEST-PLAN.md`
-- [ ] הרצה יציבה מקומית (ללא flaky)
+- [x] כתיבת טסטים אמיתיים עם Claude (POM, תיוג `@sanity`) – כל האתר: לקוח, admin, API, SQL, a11y, visual
+- [x] הרצה יציבה מקומית (ללא flaky)
 
 ## שלב 3 – Playwright Traces
 - [x] הגדרת `trace: 'on-first-retry'` ב-`playwright.config`
-- [ ] להריץ טסט שנכשל בכוונה ולפתוח trace: `npx playwright show-trace`
+- [~] להריץ טסט שנכשל בכוונה ולפתוח trace: הטסט והמדריך מוכנים (`docs/TRACE-GUIDE.md`); פתיחת ה-trace עליך
 - [ ] ללמוד לקרוא: timeline, network, console, DOM snapshots
 - [ ] לתקן באג/flakiness בעזרת trace
 - [ ] (בונוס) Trace Viewer אונליין: trace.playwright.dev
 
 ## שלב 4 – Dynamic Workflow (פיצ'ר של Claude)
-- [ ] מחקר: תיעוד רשמי של הפיצ'ר (קובץ שמגדיר פרומפט לכל שלב, model/effort לכל שלב)
-- [ ] תכנון הפלואו:
+- [x] מחקר: תיעוד רשמי של הפיצ'ר (`docs/DYNAMIC-WORKFLOW.md`)
+- [x] תכנון הפלואו:
   1. gather context
   2. draft test cases
   3. critic (לולאה עד אישור)
   4. draft code
   5. lint + fix
-- [ ] לכתוב את קובץ ה-workflow
-- [ ] לבחור model/effort שונה לכל שלב (למשל: critic חזק, lint זול)
-- [ ] להריץ על פיצ'ר אמיתי באתר ולשפר פרומפטים
+- [x] לכתוב את קובץ ה-workflow (`.claude/workflows/generate-tests.js`)
+- [~] לבחור model/effort שונה לכל שלב: model לכל שלב הוגדר; effort לכל שלב לא מתועד ב-`agent()`
+- [ ] להריץ על פיצ'ר אמיתי באתר ולשפר פרומפטים (`/generate-tests <feature>`; הלוגיקה נבדקה ב-dry run בלבד)
 
 ## שלב 5 – Claude ב-CI (GitHub Actions)
-- [ ] workflow ב-`.github/workflows/` שמריץ Playwright
-- [ ] שמירת traces/reports כ-artifacts
+- [x] workflow ב-`.github/workflows/` שמריץ Playwright
+- [x] שמירת traces/reports כ-artifacts
 - [ ] הוספת `ANTHROPIC_API_KEY` ל-GitHub Secrets (לעולם לא בקוד!)
-- [ ] שילוב Claude ב-CI (למשל Claude Code GitHub Action: review ל-PR או ניתוח כשלונות)
+- [~] שילוב Claude ב-CI: ניתוח כשלונות בנוי; ירוץ בפועל רק אחרי הוספת המפתח
 - [ ] הרצה מוצלחת + צילום מסך/לינק לריצה
 
 ## שלב 6 – ליטוש לתיק עבודות
-- [ ] README בעברית/אנגלית: מטרה, ארכיטקטורה, איך מריצים, תמונות
+- [~] README: מטרה, ארכיטקטורה, איך מריצים (עדיין בלי תמונות)
 - [ ] תיעוד מה למדת (פרומפטים, סקילים, workflow)
-- [ ] ריפו ציבורי ונקי
+- [x] ריפו ציבורי ונקי
 - [ ] פוסט LinkedIn / הוספה לקו"ח
 - [ ] הכנה לראיון: להסביר כל החלטה בפרויקט
 
 ## רעיונות "ועוד" (אופציונלי)
-- [ ] API testing ב-Playwright
-- [ ] Visual regression
-- [ ] Accessibility (axe-core)
-- [ ] Data-driven tests / fixtures
+- [x] API testing ב-Playwright
+- [x] Visual regression
+- [x] Accessibility (axe-core)
+- [x] Data-driven tests / fixtures
+- [x] פרויקט תאום ב-Selenium Java (`Guy1055/selenium-java-project`)
+- [x] שכבת SQL (placeholders מול סכמה אמיתית; רצה רק עם `DB_URL`)
 - [x] MCP של Playwright עם Claude (`.mcp.json`, גרסה נעוצה; נטען בסשן חדש אחרי אישור ב-/mcp)

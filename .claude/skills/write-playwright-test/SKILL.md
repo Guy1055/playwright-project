@@ -10,13 +10,14 @@ Follow these steps in order. Keep each test small and independent.
 ## 1. Before writing
 - Read an existing spec (e.g. `tests/home.spec.ts`) and any related page object in `pages/` to match style.
 - Check the target flow on the live site (or the Test Plan if one exists). Do not guess locators.
-- Only exercise flows a normal user could. Use test accounts, never real personal data.
+- Shared public demo: writes only on records the test created, then clean up. Negative login tests only on a user the test registered. Use test accounts, never real personal data.
 
 ## 2. Structure
 - Specs live in `tests/<feature>.spec.ts`; page objects in `pages/<Page>Page.ts`.
 - One `test.describe` per feature; one behavior per `test`. Test names describe the behavior ("adds a product to the cart"), not the implementation.
 - Page objects hold locators and user actions (`search(term)`, `addToCart()`). Assertions stay in the spec, not in the page object.
 - Page object skeleton: see [templates.md](templates.md).
+- Import `test` from `fixtures/test.ts` when a test needs `api`, `customer`, `customerPage`, `adminPage` or `db`.
 - Tests must not depend on each other or on execution order. Set up their own state.
 
 ## 3. Locators (priority order)
@@ -34,7 +35,8 @@ Follow these steps in order. Keep each test small and independent.
 
 ## 6. Before finishing
 - Run only the affected spec: `npx playwright test tests/<file>.spec.ts` and confirm it passes. Run it twice to catch obvious flakiness.
-- Do not commit failing or skipped tests. Report honestly if something could not be verified.
+- Do not commit failing or skipped tests, with two exceptions: a real site defect uses `test.fail` with a BUG id from `TEST-PLAN.md`, and the `@db` tier skips without `DB_URL`. Report honestly if something could not be verified.
+- A new scenario goes into the Selenium project too, under the same id.
 - Commit with the `commit-message` skill; stage files by explicit path.
 
 See [templates.md](templates.md) for a page object and spec template.

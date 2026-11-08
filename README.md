@@ -60,6 +60,7 @@ Runs are headed locally; set `HEADLESS=1` for headless.
 
 ## CI
 [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml):
+- The public site shows a Cloudflare check to data-center IPs, so CI starts a private copy of Toolshop in Docker and tests that. This also gives the SQL tier a real database.
 - `@sanity` on every push; the full suite nightly and on demand, in shards, merged into one HTML report.
 - Traces, reports and failure output are kept as artifacts.
 - When a run fails, Claude analyses the results read-only and writes the likely cause per failure to the run summary. It needs the `ANTHROPIC_API_KEY` secret and skips cleanly without it.

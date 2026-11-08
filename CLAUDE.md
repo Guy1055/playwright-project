@@ -44,16 +44,17 @@ User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English
 - Give a recommendation, not a survey of options.
 
 ## Testing notes
-- Tag tests with `{ tag: "@sanity" }` (broad core coverage, fast enough for every push); everything else is untagged and runs only in the full suite.
+- Tag tests with `{ tag: "@sanity" }` (broad core coverage, fast enough for every push); everything else runs only in the full suite. Other tags: `@api`, `@db` (skips without `DB_URL`), `@a11y`, `@visual` (local only).
+- A real site defect uses `test.fail` with a BUG id from `TEST-PLAN.md`.
+- Sister project in Selenium Java: `../selenium-java-project`. A new scenario goes into both, under the same id.
 - Local, per change: run only the affected spec file(s).
 - On every push (CI, step 5): `npx playwright test --grep @sanity`.
 - Full suite: in CI on a nightly schedule and manually, parallel/sharded.
 
 ## Current status (update at the end of each session)
-- Done: step 0, skill `commit-message` (verified), skill `write-playwright-test` (written; auto-activation test pending), Playwright installed and configured, 2 smoke tests tagged `@sanity` (`tests/home.spec.ts`).
-- Done: site exploration and `TEST-PLAN.md` (scenarios CAT/PRD/CRT/CHK/AUTH with priorities).
-- Done: all P1 scenarios implemented and stable (`tests/home|cart|auth|checkout.spec.ts`, page objects under `pages/`). Playwright MCP configured in `.mcp.json` (pinned version; approve it in a new session). Chromium installed locally.
-- Done: CAT-05 (`tests/catalog-filter.spec.ts`, `HomePage` filter helpers), explored via Playwright MCP; `prompt-notes.md` started (MCP vs built-in browser). `.playwright-mcp/` is gitignored.
-- Next: more prompt practice (before/after), remaining P2 scenarios from the plan, then traces, dynamic workflow, CI.
+- Done: whole-site automation (customer UI, admin, API for all 81 operations, SQL placeholders, a11y, visual), page objects under `pages/`, fixtures, `TEST-PLAN.md` with 8 known site defects.
+- Done: Playwright MCP, trace practice spec and guide, dynamic workflow `.claude/workflows/generate-tests.js`, CI with sanity on push, nightly sharded full suite and Claude failure analysis, README.
+- Done: sister project in Selenium Java (`Guy1055/selenium-java-project`).
+- Left for the user: add `ANTHROPIC_API_KEY` to GitHub Secrets, run `/generate-tests` on a real feature, the skill auto-activation check in a new session, prompt practice, reading a trace, LinkedIn post, interview prep. See `CHECKLIST.md`.
 - Environment notes: Windows, Git Bash and PowerShell. Python is NOT installed: use Node or shell tools for scripts. Run tests with `npx playwright test` (add `--grep @sanity` for the sanity tier).
 - Commit messages end with `Commit #N` where N = `git rev-list --count HEAD` + 1 (see the `commit-message` skill).

@@ -77,7 +77,8 @@ Documented with `test.fail`, so the test goes red the day the site is fixed.
 | Locking the shared accounts | Negative login tests use throwaway users only |
 | Load on a public service | 3 workers locally, 2 per shard in CI |
 | Corporate proxy | Proxy passed explicitly in `playwright.config.ts` |
-| No DB access on the demo | SQL tier skips unless `DB_URL` is set |
+| No DB access on the demo | SQL tier skips unless `DB_URL` is set; CI sets it against a private instance |
+| Cloudflare check for data-center IPs on the public site | CI runs against a private Docker copy of Toolshop |
 
 ## 7. Entry / exit criteria
 - Entry: site reachable, `npm ci` and browsers installed.

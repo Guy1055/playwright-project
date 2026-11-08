@@ -2,6 +2,7 @@ import { test, expect } from '../fixtures/test';
 import { HomePage } from '../pages/HomePage';
 import { NavBar } from '../pages/NavBar';
 import { ProductPage } from '../pages/ProductPage';
+import { HOME_URL } from '../support/env';
 
 test.describe('Catalog', () => {
   test('CAT-03: a search with no matches shows the empty state', async ({ page }) => {

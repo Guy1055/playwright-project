@@ -32,10 +32,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      # The public site shows a Cloudflare check to data-center IPs, so CI tests a private copy.
+      - name: Start a private Toolshop
+        run: bash .github/scripts/start-toolshop.sh
       - name: Run tests
         env:
           TIER: ${{ github.event_name == 'push' && '--grep @sanity' || '' }}
           SHARD: ${{ matrix.shard }}
+          BASE_URL: http://localhost:4200
+          API_URL: http://localhost:8091
+          DB_URL: mysql://user:root@127.0.0.1:3306/toolshop
         run: npx playwright test $TIER --shard="$SHARD"
       - name: Prepare artifact name
         if: ${{ !cancelled() }}
