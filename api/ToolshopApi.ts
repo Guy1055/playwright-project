@@ -57,6 +57,13 @@ export class ToolshopApi {
     return this.request.delete(this.url(path), { headers: this.headers() });
   }
 
+  attachFile(messageId: string, file: { name: string; mimeType: string; buffer: Buffer }) {
+    return this.request.post(this.url(`/messages/${messageId}/attach-file`), {
+      headers: this.headers(),
+      multipart: { file },
+    });
+  }
+
   /** Registers a user and returns its id. */
   async register(user: UserPayload): Promise<string> {
     const response = await this.post('/users/register', user);
