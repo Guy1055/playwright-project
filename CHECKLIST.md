@@ -51,7 +51,7 @@
 - [x] שמירת traces/reports כ-artifacts
 - [ ] הוספת `ANTHROPIC_API_KEY` ל-GitHub Secrets (לעולם לא בקוד!)
 - [~] שילוב Claude ב-CI: ניתוח כשלונות בנוי; ירוץ בפועל רק אחרי הוספת המפתח
-- [ ] הרצה מוצלחת + צילום מסך/לינק לריצה
+- [x] הרצה מוצלחת + לינק לריצה: https://github.com/Guy1055/playwright-project/actions/runs/42512921776
 
 ## שלב 6 – ליטוש לתיק עבודות
 - [~] README: מטרה, ארכיטקטורה, איך מריצים (עדיין בלי תמונות)
@@ -66,5 +66,5 @@
 - [x] Accessibility (axe-core)
 - [x] Data-driven tests / fixtures
 - [x] פרויקט תאום ב-Selenium Java (`Guy1055/selenium-java-project`)
-- [x] שכבת SQL (placeholders מול סכמה אמיתית; רצה רק עם `DB_URL`)
+- [x] שכבת SQL מול הסכמה האמיתית: מקומית מדלגת בלי `DB_URL`, וב-CI רצה מול DB פרטי
 - [x] MCP של Playwright עם Claude (`.mcp.json`, גרסה נעוצה; נטען בסשן חדש אחרי אישור ב-/mcp)
