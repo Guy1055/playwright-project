@@ -1,6 +1,7 @@
 import { test as base, type Page } from '@playwright/test';
 import { ToolshopApi } from '../api/ToolshopApi';
-import { DEMO_ADMIN } from '../support/env';
+import { DbClient } from '../db/DbClient';
+import { DB_URL, DEMO_ADMIN } from '../support/env';
 import { userPayload, type UserPayload } from '../support/testData';
 
 export interface Customer {
@@ -21,6 +22,11 @@ type TestFixtures = {
 
 type WorkerFixtures = { adminToken: string };
 
+type DbFixtures = {
+  /** Skips the test when DB_URL is not set; the public demo exposes no database. */
+  db: DbClient;
+};
+
 /** Signs the browser in by seeding the token the Angular app reads on start. */
 async function seedToken(page: Page, token: string) {
   // Seed once per tab, otherwise a sign-out would be undone by the next page load.
@@ -31,7 +37,14 @@ async function seedToken(page: Page, token: string) {
   }, token);
 }
 
-export const test = base.extend<TestFixtures, WorkerFixtures>({
+export const test = base.extend<TestFixtures & DbFixtures, WorkerFixtures>({
+  db: async ({}, use, testInfo) => {
+    testInfo.skip(!DB_URL, 'DB_URL is not set: the public demo exposes no database');
+    const client = await DbClient.connect(DB_URL!);
+    await use(client);
+    await client.close();
+  },
+
   adminToken: [
     async ({ playwright }, use) => {
       const proxyServer = process.env.HTTPS_PROXY;
