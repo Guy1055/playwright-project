@@ -32,4 +32,11 @@ export class NavBar {
     await this.userMenu.click();
     await this.page.getByTestId(testId).click();
   }
+
+  /** Report links live in a nested menu that opens on hover; clicking it closes the parent. */
+  async openReport(testId: string) {
+    await this.userMenu.click();
+    await this.page.getByRole('button', { name: 'Reports' }).hover();
+    await this.page.getByTestId(testId).click();
+  }
 }
