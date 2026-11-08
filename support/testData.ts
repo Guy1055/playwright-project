@@ -42,15 +42,17 @@ export function userPayload(overrides: Partial<UserPayload> = {}): UserPayload {
   };
 }
 
-/** Billing fields expected by POST /invoices. */
-export function billingPayload(cartId: string) {
+export const BILLING_ADDRESS = { country: 'NL', postcode: '1011AB', houseNumber: '42' };
+
+/** Billing fields expected by POST /invoices. City and state must match the postcode lookup. */
+export function billingPayload(cartId: string, city: string, state: string) {
   return {
     billing_street: 'Test Street',
-    billing_house_number: '42',
-    billing_city: 'Amsterdam',
-    billing_state: 'Noord-Holland',
-    billing_country: 'NL',
-    billing_postal_code: '1011AB',
+    billing_house_number: BILLING_ADDRESS.houseNumber,
+    billing_city: city,
+    billing_state: state,
+    billing_country: BILLING_ADDRESS.country,
+    billing_postal_code: BILLING_ADDRESS.postcode,
     payment_method: 'cash-on-delivery',
     payment_details: {},
     cart_id: cartId,

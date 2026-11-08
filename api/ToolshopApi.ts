@@ -1,6 +1,6 @@
 import { expect, type APIRequestContext, type APIResponse } from '@playwright/test';
 import { API_URL } from '../support/env';
-import type { UserPayload } from '../support/testData';
+import { BILLING_ADDRESS, billingPayload, type UserPayload } from '../support/testData';
 
 export interface Product {
   id: string;
@@ -90,6 +90,20 @@ export class ToolshopApi {
       if (page >= body.last_page) break;
     }
     return null;
+  }
+
+  /** Valid billing details: the API rejects a city that does not match the postcode lookup. */
+  async billingFor(cartId: string) {
+    const response = await this.get('/postcode-lookup', {
+      params: {
+        country: BILLING_ADDRESS.country,
+        postcode: BILLING_ADDRESS.postcode,
+        house_number: BILLING_ADDRESS.houseNumber,
+      },
+    });
+    await expectStatus(response, 200);
+    const { city, state } = await response.json();
+    return billingPayload(cartId, city, state);
   }
 
   async createCart(): Promise<string> {
