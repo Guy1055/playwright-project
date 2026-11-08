@@ -7,5 +7,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["*.ts", "tests", "pages"]
+  "include": ["*.ts", "tests", "pages", "api", "db", "fixtures", "support"]
 }
