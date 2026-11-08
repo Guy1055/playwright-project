@@ -8,7 +8,9 @@ Progress is tracked in CHECKLIST.md file.
 ## System under test
 https://practicesoftwaretesting.com (Toolshop, a public demo app built for test practice).
 - UI: Angular. API docs are linked from the site.
-- Only exercise flows that a normal user could (browse, search, cart, checkout, login, register).
+- Scope: every customer flow, the admin area and the public API, using the demo accounts the site publishes.
+- Shared public site: writes only on records the test created itself, then clean up. Never modify or delete seed data, and never call the database reset endpoint (`/refresh`).
+- Never run negative login tests against the shared demo accounts (`admin@`, `customer@`): repeated failures lock them. Use a user the test registered.
 - Use test accounts only; never real personal data.
 
 ## Conventions

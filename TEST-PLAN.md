@@ -1,8 +1,9 @@
 # Test Plan - Toolshop (practicesoftwaretesting.com)
 
 ## 1. Scope
-**In scope (UI, as a normal user):** catalog browsing, search, filters/sort, product page, cart, checkout (guest and logged-in), register, login.
-**Out of scope:** admin/back-office, payment-provider internals, performance/load, mobile layouts, languages other than EN, third-party links (courses, GitHub), chat widget.
+**In scope:** every customer flow (catalog, search, filters/sort, product, comparison, rentals, cart, checkout, auth, contact, account area), the admin area, the public REST API, and database checks (SQL written against the real schema, skipped unless `DB_URL` is set).
+**Safety on a shared demo:** writes only on records the test created, cleaned up afterwards. Seed data is never modified. Negative login tests use a freshly registered user, because failures lock the shared demo accounts.
+**Out of scope:** payment-provider internals, performance/load, mobile layouts, languages other than EN, third-party links (courses, GitHub), chat widget.
 **Environment:** public demo, Angular 20, Chromium desktop, `data-test` attribute used as test id.
 
 ## 2. Site map (from exploration)
