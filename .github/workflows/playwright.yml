@@ -43,6 +43,14 @@ jobs:
           API_URL: http://localhost:8091
           DB_URL: mysql://user:root@127.0.0.1:3306/toolshop
         run: npx playwright test $TIER --shard="$SHARD"
+      - name: Show the private Toolshop logs after a failure
+        if: ${{ failure() }}
+        env:
+          SPRINT: sprint5
+        working-directory: toolshop
+        run: |
+          docker compose -f docker-compose.yml logs --tail=60 laravel-api web
+          docker compose -f docker-compose.yml exec -T laravel-api sh -c 'tail -n 60 storage/logs/*.log' || true
       - name: Prepare artifact name
         if: ${{ !cancelled() }}
         env:

@@ -14,7 +14,9 @@ git remote add origin https://github.com/testsmith-io/practice-software-testing.
 git fetch -q --depth 1 origin "$TOOLSHOP_REF"
 git checkout -q FETCH_HEAD
 
-docker compose -f docker-compose.yml up -d --force-recreate
+compose() { docker compose -f docker-compose.yml "$@"; }
+
+compose up -d --force-recreate
 
 wait_for() { # description, attempts, delay, command...
   local description=$1 attempts=$2 delay=$3
@@ -27,14 +29,18 @@ wait_for() { # description, attempts, delay, command...
     sleep "$delay"
   done
   echo "$description did not become ready"
-  docker compose logs --tail=80
+  compose logs --tail=80
   return 1
 }
 
-wait_for "API container" 30 2 docker compose exec -T laravel-api true
-docker compose exec -T -u root laravel-api composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-ffi -q
-docker compose exec -T -u root laravel-api chown -R www-data:www-data storage bootstrap/cache || true
-wait_for "Database" 60 2 docker compose exec -T mariadb mysqladmin ping -h localhost -u root -proot --silent
-docker compose exec -T laravel-api php artisan migrate:refresh --seed --quiet
+wait_for "API container" 30 2 compose exec -T laravel-api true
+# The stack's own composer service installs the same vendor folder; running alongside it corrupts it.
+compose wait composer || true
+compose exec -T -u root laravel-api composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-ffi -q
+wait_for "Database" 60 2 compose exec -T mariadb mysqladmin ping -h localhost -u root -proot --silent
+compose exec -T -u root laravel-api php artisan migrate:refresh --seed --quiet
+# Anything artisan just created as root must stay writable by the web server.
+compose exec -T -u root laravel-api chown -R www-data:www-data storage bootstrap/cache
 wait_for "API" 30 2 curl -sf http://localhost:8091/status
+wait_for "Catalog" 30 2 curl -sf http://localhost:8091/products
 wait_for "UI" 120 5 curl -sf http://localhost:4200
