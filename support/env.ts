@@ -2,7 +2,7 @@ export const BASE_URL = process.env.BASE_URL ?? 'https://practicesoftwaretesting
 export const API_URL = process.env.API_URL ?? 'https://api.practicesoftwaretesting.com';
 
 /** Matches the storefront's home page URL on whichever environment is under test. */
-export const HOME_URL = new RegExp(`^${BASE_URL.replace(/[.]/g, '\.')}/?$`);
+export const HOME_URL = new RegExp(`^${BASE_URL.replace(/[.]/g, '\\.')}/?$`);
 
 /**
  * Admin account the site publishes for practice (see the Toolshop README).

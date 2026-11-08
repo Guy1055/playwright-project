@@ -174,7 +174,7 @@ test.describe('Navigation', () => {
     await nav.signIn.click();
     await expect(page).toHaveURL(/\/auth\/login$/);
     await nav.home.click();
-    await expect(page).toHaveURL(/practicesoftwaretesting\.com\/$/);
+    await expect(page).toHaveURL(HOME_URL);
   });
 });
 

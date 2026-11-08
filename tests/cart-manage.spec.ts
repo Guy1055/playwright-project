@@ -42,7 +42,7 @@ test.describe('Cart management', () => {
 
     await cart.continueShopping.click();
 
-    await expect(page).toHaveURL(/practicesoftwaretesting\.com\/$/);
+    await expect(page).toHaveURL(HOME_URL);
     await expect(page.getByTestId('cart-quantity')).toHaveText('1');
   });
 
