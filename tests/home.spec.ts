@@ -1,21 +1,22 @@
 import { test, expect } from '@playwright/test';
+import { HomePage } from '../pages/HomePage';
 
 test.describe('Home page', { tag: '@sanity' }, () => {
   test('shows the product catalog', async ({ page }) => {
-    await page.goto('/');
+    const home = new HomePage(page);
+    await home.goto();
 
     await expect(page).toHaveTitle(/Toolshop/);
     await expect(page.getByTestId('nav-sign-in')).toBeVisible();
-    await expect(page.getByTestId('product-name').first()).toBeVisible();
+    await expect(home.productNames.first()).toBeVisible();
   });
 
   test('searching narrows the product list', async ({ page }) => {
-    await page.goto('/');
+    const home = new HomePage(page);
+    await home.goto();
 
-    await page.getByTestId('search-query').fill('hammer');
-    await page.getByTestId('search-submit').click();
+    await home.search('hammer');
 
-    const names = page.getByTestId('product-name');
-    await expect(names.first()).toContainText(/hammer/i);
+    await expect(home.productNames.first()).toContainText(/hammer/i);
   });
 });

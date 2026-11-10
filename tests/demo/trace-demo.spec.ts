@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { HomePage } from '../../pages/HomePage';
 
 /**
  * Fails on purpose, for practising the Trace Viewer (see docs/TRACE-GUIDE.md).
@@ -6,11 +7,10 @@ import { test, expect } from '@playwright/test';
  */
 test('DEMO: a deliberately failing test to read in the Trace Viewer', async ({ page }) => {
   test.skip(!process.env.TRACE_DEMO, 'Set TRACE_DEMO=1 to run this demo');
-  await page.goto('/');
-  await page.getByTestId('search-query').fill('hammer');
-  await page.getByTestId('search-submit').click();
-  await page.getByTestId('search_completed').waitFor({ state: 'attached' });
+  const home = new HomePage(page);
+  await home.goto();
+  await home.search('hammer');
 
   // Wrong on purpose: "hammer" returns several products.
-  await expect(page.getByTestId('product-name')).toHaveCount(1);
+  await expect(home.productNames).toHaveCount(1);
 });
