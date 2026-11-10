@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 import { ProductPage } from '../pages/ProductPage';
-import { CartPage, parsePrice } from '../pages/CartPage';
+import { CartPage } from '../pages/CartPage';
+import { parsePrice } from '../support/testData';
 
 test.describe('Product page and cart', { tag: '@sanity' }, () => {
   test('product page shows name, price and description', async ({ page }) => {

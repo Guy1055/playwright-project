@@ -32,8 +32,3 @@ export class CartPage {
     await this.page.locator('tbody tr').first().locator('a.btn-danger').click();
   }
 }
-
-/** Parses "$14.15" / "14.15" into a number. */
-export function parsePrice(text: string): number {
-  return Number(text.replace(/[^0-9.]/g, ''));
-}

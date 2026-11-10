@@ -1,4 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
+import { parsePrice } from '../support/testData';
 
 export class HomePage {
   readonly searchInput: Locator;
@@ -69,7 +70,7 @@ export class HomePage {
   }
 
   async prices(): Promise<number[]> {
-    return (await this.productPrices.allInnerTexts()).map((t) => Number(t.replace(/[^0-9.]/g, '')));
+    return (await this.productPrices.allInnerTexts()).map(parsePrice);
   }
 
   /** Category checkbox in the sidebar filter (parent or sub-category, e.g. "Hammer"). */

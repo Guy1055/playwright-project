@@ -1,4 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
+import { userPayload } from '../support/testData';
 
 export class CheckoutPage {
   readonly paymentMethod: Locator;
@@ -25,13 +26,14 @@ export class CheckoutPage {
   }
 
   async fillAddressAndContinue() {
-    await this.page.getByTestId('street').fill('Test Street');
-    await this.page.getByTestId('city').fill('Amsterdam');
-    await this.page.getByTestId('state').fill('Noord-Holland');
-    await this.page.getByTestId('country').selectOption('NL');
-    await this.page.getByTestId('house_number').fill('42');
-    await this.page.getByTestId('postal_code').fill('1011AB');
-    await this.page.getByTestId('proceed-3').click();
+    const { street, city, state, country, house_number, postal_code } = userPayload().address;
+    await this.page.getByTestId('street').fill(street);
+    await this.page.getByTestId('city').fill(city);
+    await this.page.getByTestId('state').fill(state);
+    await this.page.getByTestId('country').selectOption(country);
+    await this.page.getByTestId('house_number').fill(house_number);
+    await this.page.getByTestId('postal_code').fill(postal_code);
+    await this.addressContinue.click();
   }
 
   async payWithCashOnDelivery() {
