@@ -1,6 +1,6 @@
 import { expect, type APIRequestContext, type APIResponse } from '@playwright/test';
 import { API_URL } from '../support/env';
-import { BILLING_ADDRESS, billingPayload, type UserPayload } from '../support/testData';
+import { BILLING_ADDRESS, CONTACT_MESSAGE, billingPayload, type UserPayload } from '../support/testData';
 
 export interface Product {
   id: string;
@@ -127,6 +127,27 @@ export class ToolshopApi {
     const cartId = await this.createCart();
     await expectStatus(await this.post(`/carts/${cartId}`, { product_id: productId, quantity }), 200);
     return cartId;
+  }
+
+  /** Orders an in-stock product as the user of this token and returns the invoice. */
+  async placeOrder(quantity = 1) {
+    const { id } = await this.inStockProduct();
+    const cartId = await this.createCartWith(id, quantity);
+    const response = await this.post('/invoices', await this.billingFor(cartId));
+    await expectStatus(response, 201);
+    return response.json();
+  }
+
+  /** Sends a contact message as the user of this token and returns it. */
+  async sendMessage(email: string) {
+    const response = await this.post('/messages', {
+      subject: 'webmaster',
+      message: CONTACT_MESSAGE,
+      name: 'Test User',
+      email,
+    });
+    await expectStatus(response, 200);
+    return response.json();
   }
 }
 

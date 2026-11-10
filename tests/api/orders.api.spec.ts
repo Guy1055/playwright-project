@@ -1,14 +1,6 @@
-import { test, expect, type Customer } from '../../fixtures/test';
-import { expectStatus, type ToolshopApi } from '../../api/ToolshopApi';
+import { test, expect } from '../../fixtures/test';
+import { expectStatus } from '../../api/ToolshopApi';
 import { CONTACT_MESSAGE, uniqueId, userPayload } from '../../support/testData';
-
-async function placeOrder(api: ToolshopApi, customer: Customer) {
-  const { id } = await api.inStockProduct();
-  const cartId = await api.createCartWith(id);
-  const response = await customer.api.post('/invoices', await api.billingFor(cartId));
-  await expectStatus(response, 201);
-  return response.json();
-}
 
 test.describe('Cart API', { tag: '@api' }, () => {
   test('API-CRT-01: full lifecycle of a cart', { tag: '@sanity' }, async ({ api }) => {
@@ -74,7 +66,7 @@ test.describe('Payment API', { tag: '@api' }, () => {
 
 test.describe('Invoices API', { tag: '@api' }, () => {
   test('API-INV-01: a customer can place an order', { tag: '@sanity' }, async ({ api, customer }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     expect(invoice.invoice_number).toMatch(/^INV-/);
     expect(invoice.total).toBeGreaterThan(0);
@@ -82,7 +74,7 @@ test.describe('Invoices API', { tag: '@api' }, () => {
   });
 
   test('API-INV-02: the order shows in the customer list and details', async ({ api, customer }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     const list = await (await customer.api.get('/invoices')).json();
     expect(list.data).toHaveLength(1);
@@ -134,7 +126,7 @@ test.describe('Invoices API', { tag: '@api' }, () => {
   });
 
   test('API-INV-07: a customer cannot read another customer\'s invoice', async ({ api, customer, adminApi }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
     const stranger = userPayload();
     const strangerId = await api.register(stranger);
     const strangerApi = api.withToken(await api.login(stranger.email, stranger.password));
@@ -147,7 +139,7 @@ test.describe('Invoices API', { tag: '@api' }, () => {
 
   test('API-INV-11: an admin can replace the billing details', async ({ api, customer, adminApi }) => {
     test.fail(true, 'BUG-05: PUT /invoices/{id} answers 404 for an invoice that exists');
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
     const billing = await api.billingFor('unused');
 
     const response = await adminApi.put(`/invoices/${invoice.id}`, { ...billing, billing_street: 'Replaced Street' });
@@ -158,13 +150,13 @@ test.describe('Invoices API', { tag: '@api' }, () => {
 
   test('API-INV-12: an admin can patch the billing street', async ({ api, customer, adminApi }) => {
     test.fail(true, 'BUG-05: PATCH /invoices/{id} answers 404 for an invoice that exists');
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     await expectStatus(await adminApi.patch(`/invoices/${invoice.id}`, { billing_street: 'Patched Street' }), 200);
   });
 
   test('API-INV-13: the PDF cannot be downloaded before it exists', async ({ api, customer }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     const response = await customer.api.get(`/invoices/${invoice.invoice_number}/download-pdf`);
 
@@ -172,7 +164,7 @@ test.describe('Invoices API', { tag: '@api' }, () => {
   });
 
   test('API-INV-08: an admin can search and update status', async ({ api, customer, adminApi }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     const found = await (await adminApi.get('/invoices/search', { params: { q: invoice.invoice_number } })).json();
     expect(found.data.map((i: { id: string }) => i.id)).toContain(invoice.id);
@@ -182,13 +174,13 @@ test.describe('Invoices API', { tag: '@api' }, () => {
   });
 
   test('API-INV-09: a status message that is too short is rejected', async ({ api, customer, adminApi }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     await expectStatus(await adminApi.put(`/invoices/${invoice.id}/status`, { status: 'SHIPPED', status_message: 'abc' }), 422);
   });
 
   test('API-INV-10: the PDF has not been generated right after the order', async ({ api, customer }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
 
     const response = await customer.api.get(`/invoices/${invoice.invoice_number}/download-pdf-status`);
 
@@ -222,17 +214,6 @@ test.describe('Favorites API', { tag: '@api' }, () => {
 });
 
 test.describe('Messages API', { tag: '@api' }, () => {
-  async function send(customer: Customer) {
-    const response = await customer.api.post('/messages', {
-      subject: 'webmaster',
-      message: CONTACT_MESSAGE,
-      name: 'Test User',
-      email: customer.user.email,
-    });
-    await expectStatus(response, 200);
-    return response.json();
-  }
-
   test('API-MSG-01: a guest can send a message', async ({ api }) => {
     const response = await api.post('/messages', {
       subject: 'webmaster',
@@ -254,13 +235,13 @@ test.describe('Messages API', { tag: '@api' }, () => {
   });
 
   test('API-MSG-04: an empty text attachment is accepted', async ({ customer }) => {
-    const { id } = await send(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
 
     await expectStatus(await customer.api.attachFile(id, { name: 'empty.txt', mimeType: 'text/plain', buffer: Buffer.alloc(0) }), 200);
   });
 
   test('API-MSG-09: a non-empty attachment is rejected', async ({ customer }) => {
-    const { id } = await send(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
 
     const response = await customer.api.attachFile(id, { name: 'note.txt', mimeType: 'text/plain', buffer: Buffer.from('content') });
 
@@ -268,7 +249,7 @@ test.describe('Messages API', { tag: '@api' }, () => {
   });
 
   test('API-MSG-05: reply, then read it back', async ({ customer }) => {
-    const { id } = await send(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
 
     await expectStatus(await customer.api.post(`/messages/${id}/reply`, { message: 'A reply from QA' }), 201);
 
@@ -278,7 +259,7 @@ test.describe('Messages API', { tag: '@api' }, () => {
   });
 
   test('API-MSG-06: an admin can change the status', async ({ customer, adminApi }) => {
-    const { id } = await send(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
 
     await expectStatus(await adminApi.put(`/messages/${id}/status`, { status: 'IN_PROGRESS' }), 200);
 
@@ -290,7 +271,7 @@ test.describe('Messages API', { tag: '@api' }, () => {
   });
 
   test('API-MSG-08: the list shows only the customer\'s own messages', async ({ customer }) => {
-    const { id } = await send(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
 
     const { data } = await (await customer.api.get('/messages')).json();
 

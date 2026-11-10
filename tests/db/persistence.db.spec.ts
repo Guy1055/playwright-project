@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/test';
 import { expectStatus } from '../../api/ToolshopApi';
 import { SQL } from '../../db/queries';
-import { CONTACT_MESSAGE, uniqueId } from '../../support/testData';
+import { uniqueId } from '../../support/testData';
 
 /** Placeholder tier: skipped unless DB_URL points at a self-hosted Toolshop. */
 test.describe('Database: API writes reach the tables', { tag: '@db' }, () => {
@@ -13,10 +13,8 @@ test.describe('Database: API writes reach the tables', { tag: '@db' }, () => {
     expect(row.password).not.toBe(customer.user.password);
   });
 
-  test('DB-02: an order total equals the sum of its lines', async ({ db, api, customer }) => {
-    const { id } = await api.inStockProduct();
-    const cartId = await api.createCartWith(id, 2);
-    const invoice = await (await customer.api.post('/invoices', await api.billingFor(cartId))).json();
+  test('DB-02: an order total equals the sum of its lines', async ({ db, customer }) => {
+    const invoice = await customer.api.placeOrder(2);
 
     const [row] = await db.query<{ total: number; user_id: string }>(SQL.invoiceById, [invoice.id]);
     const items = await db.query<{ unit_price: number; quantity: number }>(SQL.invoiceItems, [invoice.id]);
@@ -38,7 +36,9 @@ test.describe('Database: API writes reach the tables', { tag: '@db' }, () => {
 
   test('DB-04: a favorite is stored and then removed', async ({ db, api, customer }) => {
     const { id: productId } = await api.inStockProduct();
-    const { id } = await (await customer.api.post('/favorites', { product_id: productId })).json();
+    const favorite = await customer.api.post('/favorites', { product_id: productId });
+    await expectStatus(favorite, 201);
+    const { id } = await favorite.json();
     expect(await db.query(SQL.favorite, [customer.id, productId])).toHaveLength(1);
 
     await expectStatus(await customer.api.delete(`/favorites/${id}`), 204);
@@ -47,14 +47,7 @@ test.describe('Database: API writes reach the tables', { tag: '@db' }, () => {
   });
 
   test('DB-05: a contact message is stored as NEW', async ({ db, customer }) => {
-    const { id } = await (
-      await customer.api.post('/messages', {
-        subject: 'webmaster',
-        message: CONTACT_MESSAGE,
-        name: 'Test User',
-        email: customer.user.email,
-      })
-    ).json();
+    const { id } = await customer.api.sendMessage(customer.user.email);
 
     const [row] = await db.query<{ status: string; user_id: string }>(SQL.contactRequest, [id]);
 
@@ -63,11 +56,19 @@ test.describe('Database: API writes reach the tables', { tag: '@db' }, () => {
 
   test('DB-06: a deleted brand leaves no row', async ({ db, api, adminApi }) => {
     const id = uniqueId();
-    const brand = await (await api.post('/brands', { name: `QA Brand ${id}`, slug: `qa-brand-${id}` })).json();
-    expect(await db.query(SQL.brandById, [brand.id])).toHaveLength(1);
+    const created = await api.post('/brands', { name: `QA Brand ${id}`, slug: `qa-brand-${id}` });
+    await expectStatus(created, 201);
+    const brand = await created.json();
 
-    await expectStatus(await adminApi.delete(`/brands/${brand.id}`), 204);
+    try {
+      expect(await db.query(SQL.brandById, [brand.id])).toHaveLength(1);
 
-    expect(await db.query(SQL.brandById, [brand.id])).toHaveLength(0);
+      await expectStatus(await adminApi.delete(`/brands/${brand.id}`), 204);
+
+      expect(await db.query(SQL.brandById, [brand.id])).toHaveLength(0);
+    } finally {
+      // No-op (404) when the delete above worked.
+      await adminApi.delete(`/brands/${brand.id}`);
+    }
   });
 });

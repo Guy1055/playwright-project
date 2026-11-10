@@ -1,20 +1,11 @@
-import { test, expect, type Customer } from '../fixtures/test';
-import { expectStatus, type ToolshopApi } from '../api/ToolshopApi';
+import { test, expect } from '../fixtures/test';
+import { expectStatus } from '../api/ToolshopApi';
 import { AccountPage } from '../pages/AccountPage';
 import { ProfilePage } from '../pages/ProfilePage';
 import { FavoritesPage } from '../pages/FavoritesPage';
 import { InvoicesPage } from '../pages/InvoicesPage';
 import { MessagesPage } from '../pages/MessagesPage';
 import { CONTACT_MESSAGE } from '../support/testData';
-
-/** Places an order for the customer through the API and returns the invoice. */
-async function placeOrder(api: ToolshopApi, customer: Customer) {
-  const { id } = await api.inStockProduct();
-  const cartId = await api.createCartWith(id);
-  const response = await customer.api.post('/invoices', await api.billingFor(cartId));
-  await expectStatus(response, 201);
-  return response.json();
-}
 
 test.describe('Account overview', () => {
   for (const { section, path, title } of [
@@ -127,8 +118,8 @@ test.describe('Invoices', () => {
     await expect(invoices.rows).toHaveCount(0);
   });
 
-  test('ACC-10: an order appears in the list and opens its details', async ({ customerPage, customer, api }) => {
-    const invoice = await placeOrder(api, customer);
+  test('ACC-10: an order appears in the list and opens its details', async ({ customerPage, customer }) => {
+    const invoice = await customer.api.placeOrder();
     const invoices = new InvoicesPage(customerPage);
 
     await invoices.goto();
@@ -143,19 +134,8 @@ test.describe('Invoices', () => {
 });
 
 test.describe('Messages', () => {
-  async function sendMessage(customer: Customer) {
-    const response = await customer.api.post('/messages', {
-      subject: 'webmaster',
-      message: CONTACT_MESSAGE,
-      name: 'Test User',
-      email: customer.user.email,
-    });
-    await expectStatus(response, 200);
-    return response.json();
-  }
-
   test('ACC-11: a sent message appears in the list', async ({ customerPage, customer }) => {
-    await sendMessage(customer);
+    await customer.api.sendMessage(customer.user.email);
     const messages = new MessagesPage(customerPage);
 
     await messages.goto();
@@ -165,7 +145,7 @@ test.describe('Messages', () => {
   });
 
   test('ACC-12: a customer can reply on the message page', async ({ customerPage, customer }) => {
-    const { id } = await sendMessage(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
     const messages = new MessagesPage(customerPage);
     await messages.openDetails(id, CONTACT_MESSAGE);
     const reply = 'A follow-up from the automated QA suite, please ignore this reply.';
