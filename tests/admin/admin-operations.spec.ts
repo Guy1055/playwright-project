@@ -1,22 +1,14 @@
-import { test, expect, type Customer } from '../../fixtures/test';
-import { expectStatus, type ToolshopApi } from '../../api/ToolshopApi';
+import { test, expect } from '../../fixtures/test';
+import { expectStatus } from '../../api/ToolshopApi';
 import { AdminListPage } from '../../pages/admin/AdminListPage';
 import { AdminFormPage } from '../../pages/admin/AdminFormPage';
 import { AdminOrderPage } from '../../pages/admin/AdminOrderPage';
 import { AdminMessagePage } from '../../pages/admin/AdminMessagePage';
 import { CONTACT_MESSAGE, uniqueId, userPayload } from '../../support/testData';
 
-async function placeOrder(api: ToolshopApi, customer: Customer) {
-  const { id } = await api.inStockProduct();
-  const cartId = await api.createCartWith(id);
-  const response = await customer.api.post('/invoices', await api.billingFor(cartId));
-  await expectStatus(response, 201);
-  return response.json();
-}
-
 test.describe('Admin orders', () => {
   test('ADM-40: an admin can search orders by invoice number', async ({ adminPage, api, customer }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
     const list = new AdminListPage(adminPage, 'order', '/admin/orders');
     await list.goto();
 
@@ -27,7 +19,7 @@ test.describe('Admin orders', () => {
   });
 
   test('ADM-41: an admin can update the status of an order', async ({ adminPage, api, customer, adminApi }) => {
-    const invoice = await placeOrder(api, customer);
+    const invoice = await customer.api.placeOrder();
     const order = new AdminOrderPage(adminPage);
     await order.goto(invoice.id);
     await expect(order.invoiceNumber).toHaveValue(invoice.invoice_number);
@@ -42,19 +34,13 @@ test.describe('Admin orders', () => {
 
 test.describe('Admin users', () => {
   test('ADM-50: an admin can add a user', async ({ adminPage, adminApi }) => {
-    const email = `qa.${uniqueId()}@example.com`;
+    const user = userPayload({ last_name: 'Admin Added' });
+    const { email } = user;
     const form = new AdminFormPage(adminPage);
     await adminPage.goto('/admin/users/add');
 
     try {
-      await form.fillUser({
-        firstName: 'Test',
-        lastName: 'Admin Added',
-        email,
-        password: `Qa!${uniqueId()}xZ`,
-        dob: '1990-01-15',
-        phone: '0612345678',
-      });
+      await form.fillUser(user);
       await form.submit('user');
 
       await expect(form.success).toBeVisible();
@@ -82,31 +68,25 @@ test.describe('Admin users', () => {
     const user = userPayload();
     const id = await api.register(user);
     const list = new AdminListPage(adminPage, 'user', '/admin/users');
-    await list.goto();
 
-    await list.search(user.email);
-    await expect(list.rows).toHaveCount(1);
-    await list.deleteButton(id).click();
+    try {
+      await list.goto();
+      await list.search(user.email);
+      await expect(list.rows).toHaveCount(1);
+      await list.deleteButton(id).click();
 
-    await expect(list.toast.filter({ hasText: 'deleted' })).toBeVisible();
-    await expectStatus(await adminApi.get(`/users/${id}`), 404);
+      await expect(list.toast.filter({ hasText: 'deleted' })).toBeVisible();
+      await expectStatus(await adminApi.get(`/users/${id}`), 404);
+    } finally {
+      // No-op (404) when the UI delete worked.
+      await adminApi.delete(`/users/${id}`);
+    }
   });
 });
 
 test.describe('Admin messages', () => {
-  async function customerMessage(customer: Customer) {
-    const response = await customer.api.post('/messages', {
-      subject: 'webmaster',
-      message: CONTACT_MESSAGE,
-      name: 'Test User',
-      email: customer.user.email,
-    });
-    await expectStatus(response, 200);
-    return response.json();
-  }
-
   test('ADM-60: an admin can reply to a message', async ({ adminPage, customer }) => {
-    const { id } = await customerMessage(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
     const message = new AdminMessagePage(adminPage);
     await message.goto(id, CONTACT_MESSAGE);
     const reply = 'An admin answer from the automated QA suite, please ignore.';
@@ -118,7 +98,7 @@ test.describe('Admin messages', () => {
   });
 
   test('ADM-61: an admin can change the message status', async ({ adminPage, customer, adminApi }) => {
-    const { id } = await customerMessage(customer);
+    const { id } = await customer.api.sendMessage(customer.user.email);
     const message = new AdminMessagePage(adminPage);
     await message.goto(id, CONTACT_MESSAGE);
 

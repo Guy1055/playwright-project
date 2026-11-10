@@ -1,8 +1,9 @@
 import { test, expect } from '../fixtures/test';
 import { LoginPage } from '../pages/LoginPage';
-import { RegisterPage, createTestUser } from '../pages/RegisterPage';
+import { RegisterPage } from '../pages/RegisterPage';
 import { ForgotPasswordPage } from '../pages/ForgotPasswordPage';
 import { NavBar } from '../pages/NavBar';
+import { userPayload } from '../support/testData';
 
 test.describe('Login', () => {
   test('AUTH-03: a wrong password shows an error', async ({ page, customer }) => {
@@ -58,7 +59,8 @@ test.describe('Login', () => {
   test('AUTH-11: a customer cannot open the admin area', async ({ customerPage }) => {
     await customerPage.goto('/admin/dashboard');
 
-    await expect(customerPage).not.toHaveURL(/\/admin/);
+    await expect(customerPage).toHaveURL(/\/auth\/login/);
+    await expect(customerPage.getByTestId('page-title')).toBeHidden();
   });
 });
 
@@ -76,7 +78,7 @@ test.describe('Registration', () => {
       const register = new RegisterPage(page);
       await register.goto();
 
-      await register.register({ ...createTestUser(), ...change });
+      await register.register(userPayload(change));
 
       await expect(page.getByTestId(errorField)).toBeVisible();
       await expect(page).toHaveURL(/\/auth\/register/);
@@ -87,7 +89,7 @@ test.describe('Registration', () => {
     const register = new RegisterPage(page);
     await register.goto();
 
-    await register.register({ ...createTestUser(), email: customer.user.email });
+    await register.register(userPayload({ email: customer.user.email }));
 
     await expect(page.getByTestId('register-error')).toContainText('already exists');
   });

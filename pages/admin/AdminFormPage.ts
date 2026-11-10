@@ -1,4 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
+import type { UserPayload } from '../../support/testData';
 
 export interface ProductForm {
   name: string;
@@ -8,15 +9,6 @@ export interface ProductForm {
   brandId: string;
   categoryId: string;
   imageId: string;
-}
-
-export interface UserForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  dob: string;
-  phone: string;
 }
 
 /** Add/edit screens for admin records. Fields are addressed by their data-test value. */
@@ -56,15 +48,17 @@ export class AdminFormPage {
     await this.page.getByTestId('product-image-id').selectOption(product.imageId);
   }
 
-  async fillUser(user: UserForm) {
-    await this.page.getByTestId('first-name').fill(user.firstName);
-    await this.page.getByTestId('last-name').fill(user.lastName);
+  /** Fills the form from a `userPayload()`. */
+  async fillUser(user: UserPayload) {
+    const { address } = user;
+    await this.page.getByTestId('first-name').fill(user.first_name);
+    await this.page.getByTestId('last-name').fill(user.last_name);
     await this.page.getByTestId('dob').fill(user.dob);
-    await this.page.getByTestId('country').selectOption('NL');
-    await this.page.getByTestId('postal_code').fill('1011AB');
-    await this.page.getByTestId('street').fill('Test Street');
-    await this.page.getByTestId('city').fill('Amsterdam');
-    await this.page.getByTestId('state').fill('Noord-Holland');
+    await this.page.getByTestId('country').selectOption(address.country);
+    await this.page.getByTestId('postal_code').fill(address.postal_code);
+    await this.page.getByTestId('street').fill(address.street);
+    await this.page.getByTestId('city').fill(address.city);
+    await this.page.getByTestId('state').fill(address.state);
     await this.page.getByTestId('phone').fill(user.phone);
     await this.page.getByTestId('email').fill(user.email);
     await this.page.getByTestId('password').fill(user.password);

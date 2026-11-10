@@ -1,22 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
-
-export interface NewUser {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-/** Unique throwaway test user; fake data only. */
-export function createTestUser(): NewUser {
-  const id = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
-  return {
-    firstName: 'Test',
-    lastName: 'User',
-    email: `qa.${id}@example.com`,
-    password: `Qa!${id}xZ`,
-  };
-}
+import type { UserPayload } from '../support/testData';
 
 export class RegisterPage {
   readonly submit: Locator;
@@ -29,17 +12,19 @@ export class RegisterPage {
     await this.page.goto('/auth/register');
   }
 
-  async register(user: NewUser) {
-    await this.page.getByTestId('first-name').fill(user.firstName);
-    await this.page.getByTestId('last-name').fill(user.lastName);
-    await this.page.getByTestId('dob').fill('1990-01-15');
-    await this.page.getByTestId('country').selectOption('NL');
-    await this.page.getByTestId('postal_code').fill('1011AB');
-    await this.page.getByTestId('house_number').fill('42');
-    await this.page.getByTestId('street').fill('Test Street');
-    await this.page.getByTestId('city').fill('Amsterdam');
-    await this.page.getByTestId('state').fill('Noord-Holland');
-    await this.page.getByTestId('phone').fill('0612345678');
+  /** Fills the form from a `userPayload()` and submits it. */
+  async register(user: UserPayload) {
+    const { address } = user;
+    await this.page.getByTestId('first-name').fill(user.first_name);
+    await this.page.getByTestId('last-name').fill(user.last_name);
+    await this.page.getByTestId('dob').fill(user.dob);
+    await this.page.getByTestId('country').selectOption(address.country);
+    await this.page.getByTestId('postal_code').fill(address.postal_code);
+    await this.page.getByTestId('house_number').fill(address.house_number);
+    await this.page.getByTestId('street').fill(address.street);
+    await this.page.getByTestId('city').fill(address.city);
+    await this.page.getByTestId('state').fill(address.state);
+    await this.page.getByTestId('phone').fill(user.phone);
     await this.page.getByTestId('email').fill(user.email);
     await this.page.getByTestId('password').fill(user.password);
     await this.submit.click();
