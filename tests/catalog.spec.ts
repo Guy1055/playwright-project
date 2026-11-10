@@ -135,7 +135,6 @@ test.describe('Catalog', () => {
 
     await expect(page.getByTestId('page-title')).toHaveText('Rentals');
     await expect(page.locator('[data-test^="product-"]').first()).toBeVisible();
-    expect(await page.locator('[data-test^="product-"]').count()).toBeGreaterThan(0);
   });
 
   test('PRV-01: the privacy policy page opens', async ({ page }) => {

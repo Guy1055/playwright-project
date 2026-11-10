@@ -43,7 +43,7 @@ test.describe('Admin navigation', () => {
     test(`ADM-02: a guest opening ${path} is sent away`, async ({ page }) => {
       await page.goto(path);
 
-      await expect(page).not.toHaveURL(new RegExp(`${path}$`));
+      await expect(page).toHaveURL(/\/auth\/login/);
     });
   }
 });
