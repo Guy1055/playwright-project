@@ -1,7 +1,7 @@
 import { test as base, type Page } from '@playwright/test';
 import { ToolshopApi } from '../api/ToolshopApi';
 import { DbClient } from '../db/DbClient';
-import { DB_URL, DEMO_ADMIN } from '../support/env';
+import { DB_URL, DEMO_ADMIN, proxyOptions } from '../support/env';
 import { userPayload, type UserPayload } from '../support/testData';
 
 export interface Customer {
@@ -47,10 +47,7 @@ export const test = base.extend<TestFixtures & DbFixtures, WorkerFixtures>({
 
   adminToken: [
     async ({ playwright }, use) => {
-      const proxyServer = process.env.HTTPS_PROXY;
-      const context = await playwright.request.newContext({
-        proxy: proxyServer ? { server: proxyServer, bypass: process.env.NO_PROXY } : undefined,
-      });
+      const context = await playwright.request.newContext({ proxy: proxyOptions() });
       await use(await new ToolshopApi(context).login(DEMO_ADMIN.email, DEMO_ADMIN.password));
       await context.dispose();
     },
@@ -65,13 +62,20 @@ export const test = base.extend<TestFixtures & DbFixtures, WorkerFixtures>({
     await use(api.withToken(adminToken));
   },
 
-  customer: async ({ api, adminApi }, use) => {
+  customer: async ({ api, adminApi }, use, testInfo) => {
     const user = userPayload();
     const id = await api.register(user);
-    const token = await api.login(user.email, user.password);
-    await use({ id, token, user, api: api.withToken(token) });
-    // Best effort: a user who placed an order cannot be deleted (foreign key).
-    await adminApi.delete(`/users/${id}`).catch(() => undefined);
+    try {
+      const token = await api.login(user.email, user.password);
+      await use({ id, token, user, api: api.withToken(token) });
+    } finally {
+      // Best effort: a user who placed an order cannot be deleted (foreign key),
+      // but an expired admin token must not silently leak users.
+      const response = await adminApi.delete(`/users/${id}`).catch(() => undefined);
+      if (response?.status() === 401) {
+        testInfo.annotations.push({ type: 'cleanup', description: `admin token rejected, user ${id} was not deleted` });
+      }
+    }
   },
 
   customerPage: async ({ page, customer }, use) => {

@@ -77,20 +77,24 @@ export class ToolshopApi {
     return (await response.json()).access_token;
   }
 
-  /** First purchasable product on the given catalog page (stock varies on the demo). */
-  async inStockProduct(page = 1): Promise<Product> {
-    const response = await this.get('/products', { params: { page } });
-    await expectStatus(response, 200);
-    const { data } = (await response.json()) as { data: Product[] };
-    const product = data.find((p) => p.in_stock && !p.is_rental);
-    if (!product) throw new Error(`No in-stock product on catalog page ${page}`);
-    return product;
+  /** First purchasable product, scanning the catalog (stock varies on the demo). */
+  async inStockProduct(): Promise<Product> {
+    for (let page = 1; page <= 10; page++) {
+      const response = await this.get('/products', { params: { page } });
+      await expectStatus(response, 200);
+      const body = (await response.json()) as { data: Product[]; last_page: number };
+      const product = body.data.find((p) => p.in_stock && !p.is_rental);
+      if (product) return product;
+      if (page >= body.last_page) break;
+    }
+    throw new Error('No in-stock product in the catalog');
   }
 
   /** Any out-of-stock product, scanning the catalog. Null when the demo currently has none. */
   async outOfStockProduct(): Promise<Product | null> {
     for (let page = 1; page <= 10; page++) {
       const response = await this.get('/products', { params: { page } });
+      await expectStatus(response, 200);
       const body = (await response.json()) as { data: Product[]; last_page: number };
       const product = body.data.find((p) => !p.in_stock);
       if (product) return product;
