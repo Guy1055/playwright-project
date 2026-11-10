@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { API_URL, BASE_URL } from './support/env';
+import { API_URL, BASE_URL, proxyOptions } from './support/env';
 
 const isCI = !!process.env.CI;
 const proxyServer = process.env.HTTPS_PROXY;
@@ -8,7 +8,8 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: isCI,
-  retries: isCI ? 2 : 0,
+  // One local retry so that on-first-retry also records a trace on the developer machine.
+  retries: isCI ? 2 : 1,
   // Shared public demo: keep the load low even in the full suite.
   workers: isCI ? 2 : 3,
   timeout: 45_000,
