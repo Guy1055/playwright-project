@@ -72,16 +72,21 @@ test.describe('Admin brands', () => {
     }
   });
 
-  test('ADM-13: an admin can find and delete a brand', async ({ adminPage, api }) => {
+  test('ADM-13: an admin can find and delete a brand', async ({ adminPage, api, adminApi }) => {
     const brand = await createBrand(api);
     const list = new AdminListPage(adminPage, 'brand', '/admin/brands');
-    await list.goto();
 
-    await list.search(brand.name);
-    await list.deleteButton(brand.id).click();
+    try {
+      await list.goto();
+      await list.search(brand.name);
+      await list.deleteButton(brand.id).click();
 
-    await expect(list.toast.filter({ hasText: 'Brand deleted' })).toBeVisible();
-    await expectStatus(await api.get(`/brands/${brand.id}`), 404);
+      await expect(list.toast.filter({ hasText: 'Brand deleted' })).toBeVisible();
+      await expectStatus(await api.get(`/brands/${brand.id}`), 404);
+    } finally {
+      // No-op (404) when the UI delete worked.
+      await adminApi.delete(`/brands/${brand.id}`);
+    }
   });
 
   test('ADM-14: name and slug are required', async ({ adminPage }) => {
@@ -135,15 +140,21 @@ test.describe('Admin categories', () => {
     }
   });
 
-  test('ADM-22: an admin can find and delete a category', async ({ adminPage, api }) => {
+  test('ADM-22: an admin can find and delete a category', async ({ adminPage, api, adminApi }) => {
     const category = await createCategory(api);
     const list = new AdminListPage(adminPage, 'category', '/admin/categories');
-    await list.goto();
 
-    await list.search(category.name);
-    await list.deleteButton(category.id).click();
+    try {
+      await list.goto();
+      await list.search(category.name);
+      await list.deleteButton(category.id).click();
 
-    await expect(list.toast.filter({ hasText: 'deleted' })).toBeVisible();
+      await expect(list.toast.filter({ hasText: 'deleted' })).toBeVisible();
+      await expectStatus(await api.get(`/categories/tree/${category.id}`), 404);
+    } finally {
+      // No-op (404) when the UI delete worked.
+      await adminApi.delete(`/categories/${category.id}`);
+    }
   });
 });
 
@@ -190,8 +201,10 @@ test.describe('Admin products', () => {
 
       await expect(form.success).toBeVisible();
     } finally {
-      const { data } = await (await api.get('/products/search', { params: { q: name } })).json();
-      for (const product of data) await adminApi.delete(`/products/${product.id}`);
+      const { data }: { data: { id: string; name: string }[] } = await (
+        await api.get('/products/search', { params: { q: name } })
+      ).json();
+      for (const product of data.filter((p) => p.name === name)) await adminApi.delete(`/products/${product.id}`);
     }
   });
 
@@ -221,16 +234,21 @@ test.describe('Admin products', () => {
     }
   });
 
-  test('ADM-32: an admin can find and delete a product', async ({ adminPage, api }) => {
+  test('ADM-32: an admin can find and delete a product', async ({ adminPage, api, adminApi }) => {
     const product = await createProduct(api);
     const list = new AdminListPage(adminPage, 'product', '/admin/products');
-    await list.goto();
 
-    await list.search(product.name);
-    await list.deleteButton(product.id).click();
+    try {
+      await list.goto();
+      await list.search(product.name);
+      await list.deleteButton(product.id).click();
 
-    await expect(list.toast.filter({ hasText: 'deleted' })).toBeVisible();
-    await expectStatus(await api.get(`/products/${product.id}`), 404);
+      await expect(list.toast.filter({ hasText: 'deleted' })).toBeVisible();
+      await expectStatus(await api.get(`/products/${product.id}`), 404);
+    } finally {
+      // No-op (404) when the UI delete worked.
+      await adminApi.delete(`/products/${product.id}`);
+    }
   });
 
   test('ADM-33: search reset restores the product list', async ({ adminPage }) => {
