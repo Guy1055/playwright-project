@@ -1,8 +1,8 @@
 export const BASE_URL = process.env.BASE_URL ?? 'https://practicesoftwaretesting.com';
 export const API_URL = process.env.API_URL ?? 'https://api.practicesoftwaretesting.com';
 
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[]\]/g, '\/** Matches the storefront');
+export function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /** Matches the storefront's home page URL on whichever environment is under test. */

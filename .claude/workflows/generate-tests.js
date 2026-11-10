@@ -93,7 +93,8 @@ Test cases:
 ${JSON.stringify(draft, null, 2)}`,
     { label: `critic-${round}`, model: MODELS.critic, schema: VERDICT_SCHEMA },
   )
-  if (!verdict || verdict.approved) break
+  // A revision after the last round would never be reviewed, so stop here instead.
+  if (!verdict || verdict.approved || round === MAX_CRITIC_ROUNDS) break
   log(`Critic round ${round}: ${verdict.issues.length} issue(s)`)
   draft = await agent(
     `${RULES}
@@ -139,7 +140,8 @@ for (let round = 1; round <= MAX_FIX_ROUNDS; round++) {
 Report whether everything passed, and the relevant failure output if not. Do not change any file.`,
     { label: `check-${round}`, model: MODELS.fix, schema: CHECK_SCHEMA },
   )
-  if (!check || check.passed) break
+  // A fix after the last round would never be checked, so stop here instead.
+  if (!check || check.passed || round === MAX_FIX_ROUNDS) break
   await agent(
     `${RULES}
 

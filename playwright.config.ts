@@ -10,8 +10,8 @@ export default defineConfig({
   forbidOnly: isCI,
   // One local retry so that on-first-retry also records a trace on the developer machine.
   retries: isCI ? 2 : 1,
-  // Shared public demo: keep the load low even in the full suite.
-  workers: isCI ? 2 : 3,
+  // Locally the shared public demo, so keep the load low; CI runs its own private Toolshop.
+  workers: isCI ? 4 : 3,
   timeout: 45_000,
   reporter: isCI ? [['blob'], ['list']] : [['html', { open: 'never' }], ['list']],
   // Screenshot baselines are OS-specific and only kept for the local machine.
@@ -22,7 +22,6 @@ export default defineConfig({
     baseURL: BASE_URL,
     testIdAttribute: 'data-test',
     trace: 'on-first-retry',
-    extraHTTPHeaders: { accept: 'application/json' },
     // Corporate network: Chromium ignores HTTPS_PROXY, so pass it explicitly.
     proxy: proxyServer ? { server: proxyServer, bypass: process.env.NO_PROXY } : undefined,
   },
