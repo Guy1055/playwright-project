@@ -55,6 +55,7 @@ User is Hebrew-speaking: explain in Hebrew, keep code and identifiers in English
 - Done: whole-site automation (customer UI, admin, API for all 81 operations, SQL placeholders, a11y, visual), page objects under `pages/`, fixtures, `TEST-PLAN.md` with 8 known site defects.
 - Done: Playwright MCP, trace practice spec and guide, dynamic workflow `.claude/workflows/generate-tests.js`, CI with sanity on push, nightly sharded full suite and Claude failure analysis, README.
 - Done: sister project in Selenium Java (`Guy1055/selenium-java-project`).
+- Done: two code-review rounds on the whole suite (fixtures, API helpers, cleanup, shared helpers in `ToolshopApi`); CI sanity green on `8f0bcdc`. Locally the public demo can show a Cloudflare check after heavy runs: that is not a test bug.
 - Left for the user: add `ANTHROPIC_API_KEY` to GitHub Secrets, run `/generate-tests` on a real feature, the skill auto-activation check in a new session, prompt practice, reading a trace, LinkedIn post, interview prep. See `CHECKLIST.md`.
 - Environment notes: Windows, Git Bash and PowerShell. Python is NOT installed: use Node or shell tools for scripts. Run tests with `npx playwright test` (add `--grep @sanity` for the sanity tier).
 - Commit messages end with `Commit #N` where N = `git rev-list --count HEAD` + 1 (see the `commit-message` skill).
